@@ -125,7 +125,7 @@ const ulTag = wrapper.querySelector("ul");
 // let create li tags according to array length for list
 for (let i = 0; i < allMusic.length; i++) {
   //let's pass the song name, artist from the array
-  let liTag = `<li li-index="${i + 1}">
+  let liTag = `<li draggable="true" class="li_tag" id="${i + 1}" li-index="${i + 1}" ondragstart="onDragStart(event);">
                 <div class="row">
                   <span>${allMusic[i].name}</span>
                   <p>${allMusic[i].artist}</p>
@@ -176,6 +176,51 @@ function playingSong(){
 function clicked(element){
   let getLiIndex = element.getAttribute("li-index");
   musicIndex = getLiIndex; //updating current song index with clicked li index
+  loadMusic(musicIndex);
+  playMusic();
+  playingSong();
+}
+
+
+const li_tag = document.querySelector('.li_tag');
+const players = document.querySelectorAll('.player');
+
+// li tag listeners
+li_tag.addEventListener('dragstart', onDragStart);
+li_tag.addEventListener('dragend', onDrop);
+
+// add listeners to music player 
+for (const player of players) {
+  player.addEventListener('dragover', dragOver);
+  player.addEventListener('dragenter', dragEnter);
+  player.addEventListener('dragleave', dragLeave);
+  player.addEventListener('drop', dragDrop);
+}
+
+// Drag Functions
+function onDragStart(e) {
+  e.dataTransfer.setData('text/plain', e.target.id);
+}
+
+function dragOver(e) {
+  e.preventDefault();
+}
+
+function dragEnter(e) {
+  e.preventDefault();
+}
+
+function dragLeave(e) {
+  e.preventDefault();
+}
+
+function dragDrop(e) {
+  e.preventDefault();
+}
+
+function onDrop(e) {
+  const draggedId = e.dataTransfer.getData('text');
+  musicIndex = draggedId; //updating current song index with clicked li index
   loadMusic(musicIndex);
   playMusic();
   playingSong();
